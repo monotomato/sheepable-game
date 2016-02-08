@@ -10,9 +10,11 @@ import upickle.default._
 object Main extends JSApp {
 
   // Just to test nested case classes. They work! \o/
+  sealed trait Component
   case class Coord(value: Int, foo: String = "defaultFoo")
-  case class SpatialComponent(x: Coord, y: Coord)
-  case class GameObject(id: Int, name: String, spatial: SpatialComponent)
+  case class SpatialComponent(x: Coord, y: Coord) extends Component
+  case class PhysicsComponent(physics: Int) extends Component
+  case class GameObject(id: Int, name: String, components: Array[Component])
 
   def main(): Unit = {
     var res = Resource("aasdadsd")
@@ -22,30 +24,25 @@ object Main extends JSApp {
   }
 
   def jsontest(): Unit = {
-    val spatjson =
-      """
-      {
-        "x":{"value":1312},
-        "y":{"value":3, "foo":"qqqq"}
-      }
-      """
-    val gameobjectjson =
-      """
-      {
-        "id":1,
-        "name": "TestGameObject",
-        "spatial":{
-          "x":{"value":3},
-          "y":{"value":3, "foo":"asd"}
+    var jsontest = """
+    {
+      "id":5,
+      "name":"TestGO",
+      "components":[
+        {
+          "$type":"game.Main.SpatialComponent",
+          "x":{"value":5,"foo":"xxx"},
+          "y":{"value":6}
+        },
+        {
+          "$type":"game.Main.PhysicsComponent",
+          "physics":5
         }
-      }
-      """
-
-    var spatial = read[SpatialComponent](spatjson);
-
-    var gameObject = read[GameObject](gameobjectjson);
-
-    println(spatial)
-    println(gameObject)
+      ]
+    }
+    """
+    println("jsontest")
+    var parsed = read[GameObject](jsontest)
+    println(write(parsed))
   }
 }
