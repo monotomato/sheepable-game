@@ -13,6 +13,11 @@ version := "0.1-SNAPSHOT"
 
 bootSnippet := "dev.MainApp().main();"
 
+libraryDependencies ++= Seq(
+  "org.scala-js" %%% "scalajs-dom" % "0.8.0"
+  // "com.lihaoyi" %%% "upickle" % "0.3.8"
+)
+
 updateBrowsers <<= updateBrowsers.triggeredBy(fastOptJS in Compile)
 
 scalaJSOptimizerOptions ~= { _.withDisableOptimizer(true) }
@@ -20,10 +25,6 @@ scalaJSOptimizerOptions ~= { _.withDisableOptimizer(true) }
 spliceBrowsers <<= spliceBrowsers.triggeredBy(fastOptJS in Compile)
 
 refreshBrowsers <<= refreshBrowsers.triggeredBy(fastOptJS in Compile)
-
-libraryDependencies ++= Seq(
-  "org.scala-js" %%% "scalajs-dom" % "0.8.0"
-)
 
 val buildMainPath = SettingKey[File]("build-main-path", "The absolute path where to write engine js.")
 
